@@ -9,6 +9,7 @@ def sha256(x, y):
 
 
 leaves = ["a", "b", "c", "d"]
+leaves = list(map(lambda x: x.encode(),leaves))
 tree = MerkleTree(leaves, sha256)
 root = tree.root.hex()
 

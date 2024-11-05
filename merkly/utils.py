@@ -92,7 +92,7 @@ def validate_leafs(leafs: List[str]):
         raise Exception("Invalid size, need > 2")
 
     a = isinstance(leafs, List)
-    b = all(isinstance(leaf, str) for leaf in leafs)
+    b = all(isinstance(leaf, bytes) for leaf in leafs)
     if not (a and b):
         raise Exception("Invalid type of leafs")
 

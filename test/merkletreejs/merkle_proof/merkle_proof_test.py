@@ -9,8 +9,9 @@ def sha256(x, y):
 
 
 leaves = ["a", "b", "c", "d", "e", "f", "g", "h"]
+leaves = list(map(lambda x: x.encode(),leaves))
 tree = MerkleTree(leaves, sha256)
-leaf = "a"
+leaf = ("a").encode()
 proof = tree.proof(leaf)
 formatted_proof = [
     {"data": node.data.hex(), "position": node.side.name.lower()} for node in proof

@@ -28,18 +28,18 @@ class MerkleTree:
 
     def __init__(
         self,
-        leaves: List[str],
+        leaves: List[bytes],
         hash_function: Callable[[bytes, bytes], bytes] = lambda x, y: keccak(x + y),
     ) -> None:
         validate_leafs(leaves)
         validate_hash_function(hash_function)
         self.hash_function: Callable[[bytes, bytes], bytes] = hash_function
-        self.raw_leaves: List[str] = leaves
-        self.leaves: List[str] = self.__hash_leaves(leaves)
-        self.short_leaves: List[str] = self.short(self.leaves)
+        self.raw_leaves: List[bytes] = leaves
+        self.leaves: List[bytes] = self.__hash_leaves(leaves)
+        self.short_leaves: List[bytes] = self.short(self.leaves)
 
-    def __hash_leaves(self, leaves: List[str]) -> List[str]:
-        return list(map(lambda x: self.hash_function(x.encode(), bytes()), leaves))
+    def __hash_leaves(self, leaves: List[bytes]) -> List[bytes]:
+        return list(map(lambda x: self.hash_function(x, bytes()), leaves))
 
     def __repr__(self) -> str:
         return f"""MerkleTree(\nraw_leaves: {self.raw_leaves}\nleaves: {self.leaves}\nshort_leaves: {self.short(self.leaves)})"""
@@ -51,13 +51,13 @@ class MerkleTree:
     def root(self) -> bytes:
         return self.make_root(self.leaves)
 
-    def proof(self, raw_leaf: str) -> List[Node]:
+    def proof(self, raw_leaf: bytes) -> List[Node]:
         return self.make_proof(
-            self.leaves, [], self.hash_function(raw_leaf.encode(), bytes())
+            self.leaves, [], self.hash_function(raw_leaf, bytes())
         )
 
-    def verify(self, proof: List[bytes], raw_leaf: str) -> bool:
-        full_proof = [self.hash_function(raw_leaf.encode(), bytes())]
+    def verify(self, proof: List[bytes], raw_leaf: bytes) -> bool:
+        full_proof = [self.hash_function(raw_leaf, bytes())]
         full_proof.extend(proof)
 
         def concat_nodes(left: Node, right: Node) -> Node:
@@ -167,15 +167,15 @@ class MerkleTree:
         return new_layer
 
     @property
-    def human_leaves(self) -> List[str]:
+    def human_leaves(self) -> List[bytes]:
         return [leaf.hex() for leaf in self.leaves]
 
     @property
-    def human_short_leaves(self) -> List[str]:
+    def human_short_leaves(self) -> List[bytes]:
         return [leaf.hex() for leaf in self.short_leaves]
 
     @staticmethod
-    def verify_proof(proof: List[Node], raw_leaf: str, root: str, **kwargs) -> bool:
+    def verify_proof(proof: List[Node], raw_leaf: bytes, root: str, **kwargs) -> bool:
         """
         Verify the validity of a Merkle proof for a given leaf against the expected root hash.
 
@@ -210,7 +210,7 @@ class MerkleTree:
         else:
             hash_function = kwargs["hash_function"]
 
-        full_proof = [hash_function(raw_leaf.encode(), bytes())]
+        full_proof = [hash_function(raw_leaf, bytes())]
         full_proof.extend(proof)
 
         def concat_nodes(left: Node, right: Node) -> Node:

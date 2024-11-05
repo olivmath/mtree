@@ -6,6 +6,8 @@ import hashlib
 
 def test_simple_merkle_tree_constructor():
     leaves = ["a", "b", "c", "d"]
+    leaves = list(map(lambda x: x.encode(),leaves))
+
     tree = MerkleTree(leaves)
 
     assert tree.raw_leaves == leaves
