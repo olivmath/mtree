@@ -36,7 +36,7 @@ classifiers = [
     keccaky = "^0.3.1"
 
 [tool.poetry.dev-dependencies]
-    conventional-pre-commit = "^3.0.0"
+    conventional-pre-commit = "^4.0.0"
     pre-commit = "^3.0.3"
     coverage = "^7.2.7"
     pyclean = "^3.0.0"
